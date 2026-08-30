@@ -76,3 +76,82 @@ body {
     transition: none;
   }
 }
+
+/*
+  Hand-written prose styles for markdown-rendered blog content.
+  No Tailwind typography plugin is installed — this keeps that
+  dependency out and stays consistent with the rest of the design
+  tokens above instead of a generic @tailwindcss/typography look.
+*/
+.prose-rubisco {
+  color: var(--color-ink-soft);
+  line-height: 1.75;
+}
+
+.prose-rubisco > * + * {
+  margin-top: 1.25em;
+}
+
+.prose-rubisco h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.375rem;
+  color: var(--color-ink);
+  margin-top: 2em;
+}
+
+.prose-rubisco h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--color-ink);
+  margin-top: 1.75em;
+}
+
+.prose-rubisco a {
+  color: var(--color-leaf);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-rubisco strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.prose-rubisco em {
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
+.prose-rubisco ul,
+.prose-rubisco ol {
+  padding-left: 1.25em;
+}
+
+.prose-rubisco ul {
+  list-style: disc;
+}
+
+.prose-rubisco ol {
+  list-style: decimal;
+}
+
+.prose-rubisco li + li {
+  margin-top: 0.5em;
+}
+
+.prose-rubisco blockquote {
+  border-left: 2px solid var(--color-leaf);
+  padding-left: 1.25em;
+  font-style: italic;
+  color: var(--color-ink);
+}
+
+.prose-rubisco code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-paper-dim);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}

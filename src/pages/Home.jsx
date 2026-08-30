@@ -41,12 +41,19 @@ export default function Home() {
               farms — not just a website, a dream farm, built and run end to
               end.
             </p>
-            <div className="mt-9">
+            <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 to="/projects"
-                className="inline-flex items-center gap-2 border border-ink px-6 py-3 font-mono text-sm text-ink transition-colors hover:border-leaf hover:bg-leaf hover:text-milk"
+                className="inline-flex items-center gap-2 border border-ink bg-ink px-6 py-3 font-mono text-sm text-milk transition-colors hover:border-leaf hover:bg-leaf"
               >
                 See our work
+                <span aria-hidden="true">&rarr;</span>
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 font-mono text-sm text-ink-soft transition-colors hover:text-leaf"
+              >
+                How we work
                 <span aria-hidden="true">&rarr;</span>
               </Link>
             </div>
@@ -58,6 +65,27 @@ export default function Home() {
               className="h-auto w-full text-leaf-dark"
               size="large"
             />
+          </div>
+        </div>
+
+        {/* Proof strip — replace figures with real ones when ready */}
+        <div className="border-t border-line/70">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4 sm:px-10">
+            {[
+              { value: '12', label: 'Farms running our systems' },
+              { value: '3', label: 'Districts covered' },
+              { value: '40k+', label: 'Litres tracked daily' },
+              { value: '2019', label: 'Building in Nepal since' },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <p className="font-display text-2xl font-medium text-mustard-dark sm:text-3xl">
+                  {stat.value}
+                </p>
+                <p className="mt-1 text-xs leading-snug text-ink-soft">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
