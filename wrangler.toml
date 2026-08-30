@@ -15,3 +15,32 @@ pages_build_output_dir = "dist"
 # name = "CONTACT_RATE_LIMITER"
 # namespace_id = "REPLACE_WITH_ID_FROM_DASHBOARD"
 # simple = { limit = 5, period = 60 }
+
+# --- Invoicing & Billing Engine -------------------------------------------
+# D1 (Cloudflare's serverless SQLite) backs the invoice ledger. Unlike the
+# blog content, invoices need atomic sequential numbering and queryable
+# financial records, which a git-commit-per-file store can't give us.
+#
+# Setup:
+#   npx wrangler d1 create rubisco-invoices
+#   -> paste the returned database_id below
+#   npx wrangler d1 migrations apply rubisco-invoices --local   (for `wrangler pages dev`)
+#   npx wrangler d1 migrations apply rubisco-invoices --remote  (for production, after first deploy)
+[[d1_databases]]
+binding = "DB"
+database_name = "rubisco-invoices"
+database_id = "REPLACE_WITH_ID_FROM_DASHBOARD"
+migrations_dir = "migrations"
+
+# Also set these as secrets/vars (Cloudflare dashboard -> Pages project ->
+# Settings -> Environment variables), alongside the existing ADMIN_EMAIL /
+# ADMIN_PASSWORD_HASH / SESSION_SECRET / GITHUB_* vars:
+#   INVOICE_PREFIX        e.g. "AGRI"        (optional, defaults to AGRI)
+#   COMPANY_NAME          your legal entity name, printed on invoices
+#   COMPANY_ADDRESS       printed on invoices
+#   COMPANY_PAN           your PAN, printed on invoices
+#   BANK_NAME             for the SWIFT wire block on foreign invoices
+#   BANK_ACCOUNT_TITLE
+#   BANK_ACCOUNT_NUMBER
+#   BANK_SWIFT_CODE
+#   BANK_ADDRESS

@@ -14,6 +14,10 @@ import NotFound from './pages/NotFound.jsx'
 import AdminLogin from './pages/admin/AdminLogin.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import AdminPostEditor from './pages/admin/AdminPostEditor.jsx'
+import AdminInvoiceList from './pages/admin/AdminInvoiceList.jsx'
+import AdminInvoiceForm from './pages/admin/AdminInvoiceForm.jsx'
+import AdminInvoiceDetail from './pages/admin/AdminInvoiceDetail.jsx'
+import AdminInvoiceAudit from './pages/admin/AdminInvoiceAudit.jsx'
 
 export default function App() {
   return (
@@ -36,6 +40,10 @@ export default function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/new" element={<AdminPostEditor />} />
         <Route path="/admin/edit/:slug" element={<AdminPostEditor />} />
+        <Route path="/admin/invoices" element={<AdminInvoiceList />} />
+        <Route path="/admin/invoices/new" element={<AdminInvoiceForm />} />
+        <Route path="/admin/invoices/audit" element={<AdminInvoiceAudit />} />
+        <Route path="/admin/invoices/:id" element={<AdminInvoiceDetail />} />
       </Route>
     </Routes>
   )
