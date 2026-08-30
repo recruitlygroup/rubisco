@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/500.css";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/400-italic.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/*
+  Rubisco Tech design tokens.
+  Palette is grounded in the Nepali agrarian landscape rather than the
+  generic "warm cream + terracotta" AI-website default: a sage-tinted
+  paper, deep forest ink, chlorophyll green, and a mustard-field gold.
+*/
+@theme {
+  --color-paper: #eef0e4;
+  --color-paper-dim: #e4e7d8;
+  --color-ink: #16241b;
+  --color-ink-soft: #3a4a3f;
+  --color-leaf: #3f6e44;
+  --color-leaf-dark: #2c4e30;
+  --color-mustard: #d9a441;
+  --color-mustard-dark: #a97a22;
+  --color-milk: #fafaf7;
+  --color-soil: #6b4a34;
+  --color-line: #c9cdb8;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
