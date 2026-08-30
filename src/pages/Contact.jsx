@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Seo from '../components/Seo.jsx'
 
 const fields = [
@@ -16,6 +16,11 @@ export default function Contact() {
   // Timestamp the form became visible — used server-side as a lightweight
   // anti-spam signal (bots tend to submit implausibly fast).
   const [formLoadedAt] = useState(() => Date.now())
+  const sentHeadingRef = useRef(null)
+
+  useEffect(() => {
+    if (status === 'sent') sentHeadingRef.current?.focus()
+  }, [status])
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -59,7 +64,11 @@ export default function Contact() {
         <Seo title="Contact" description="Tell us about your farm or operation and what isn't working right now." path="/contact" />
         <section className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-10">
           <p className="font-mono text-xs uppercase tracking-widest text-leaf">Contact</p>
-          <h1 className="mt-3 font-display text-3xl font-medium text-ink">
+          <h1
+            ref={sentHeadingRef}
+            tabIndex={-1}
+            className="mt-3 font-display text-3xl font-medium text-ink outline-none"
+          >
             Message received.
           </h1>
           <p className="mt-4 text-ink-soft">
@@ -174,7 +183,7 @@ export default function Contact() {
           </button>
 
           {status === 'error' && (
-            <p className="text-sm text-soil">
+            <p role="alert" className="text-sm text-soil">
               {errorMessage || 'Something went wrong.'} You can also email us directly at{' '}
               <a href="mailto:hello@rubisco.tech" className="underline">
                 hello@rubisco.tech

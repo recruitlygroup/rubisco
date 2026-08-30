@@ -83,7 +83,7 @@ export default function AdminLogin() {
             {status === 'submitting' ? 'Signing in…' : 'Sign in'}
           </button>
 
-          {status === 'error' && <p className="text-sm text-soil">{error}</p>}
+          {status === 'error' && <p role="alert" className="text-sm text-soil">{error}</p>}
         </form>
       </div>
     </div>

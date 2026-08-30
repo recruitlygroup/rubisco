@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const links = [
@@ -27,6 +27,12 @@ function NavItem({ to, label, onClick }) {
 
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const toggleRef = useRef(null)
+
+  function closeMenu() {
+    setOpen(false)
+    toggleRef.current?.focus()
+  }
 
   return (
     <header className="border-b border-line/70">
@@ -42,10 +48,12 @@ export default function Header() {
         </nav>
 
         <button
+          ref={toggleRef}
           type="button"
           onClick={() => setOpen((v) => !v)}
           className="flex h-9 w-9 items-center justify-center sm:hidden"
           aria-expanded={open}
+          aria-controls="mobile-menu"
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
           <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
@@ -60,10 +68,16 @@ export default function Header() {
       </div>
 
       {open && (
-        <nav className="flex flex-col gap-1 border-t border-line/70 px-6 py-4 sm:hidden">
+        <nav
+          id="mobile-menu"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') closeMenu()
+          }}
+          className="flex flex-col gap-1 border-t border-line/70 px-6 py-4 sm:hidden"
+        >
           {links.map((link) => (
             <div key={link.to} className="py-2">
-              <NavItem {...link} onClick={() => setOpen(false)} />
+              <NavItem {...link} onClick={closeMenu} />
             </div>
           ))}
         </nav>

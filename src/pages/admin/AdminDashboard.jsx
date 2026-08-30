@@ -58,7 +58,7 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
-      {error && <p className="mt-6 text-sm text-soil">{error}</p>}
+      {error && <p role="alert" className="mt-6 text-sm text-soil">{error}</p>}
 
       {posts === null && !error && (
         <p className="mt-6 font-mono text-sm text-ink-soft">Loading…</p>

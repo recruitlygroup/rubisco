@@ -46,9 +46,19 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line/70 pt-6 sm:flex-row sm:items-center">
-          <p className="font-mono text-xs text-ink-soft">
-            &copy; {year} Rubisco Tech Pvt. Ltd. All rights reserved.
-          </p>
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6">
+            <p className="font-mono text-xs text-ink-soft">
+              &copy; {year} Rubisco Tech Pvt. Ltd. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4">
+              <Link to="/privacy" className="font-mono text-xs text-ink-soft hover:text-leaf">
+                Privacy Policy
+              </Link>
+              <Link to="/terms" className="font-mono text-xs text-ink-soft hover:text-leaf">
+                Terms of Use
+              </Link>
+            </div>
+          </div>
           <LeafGrid className="h-6 w-10 text-leaf/60" size="small" />
         </div>
       </div>

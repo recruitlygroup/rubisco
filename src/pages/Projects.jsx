@@ -39,6 +39,7 @@ export default function Projects() {
               key={cat}
               type="button"
               onClick={() => setActive(cat)}
+              aria-pressed={active === cat}
               className={[
                 'border px-4 py-2 font-mono text-xs uppercase tracking-widest transition-colors',
                 active === cat

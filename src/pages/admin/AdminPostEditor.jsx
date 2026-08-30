@@ -122,8 +122,9 @@ export default function AdminPostEditor() {
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">Title</label>
+            <label htmlFor="post-title" className="font-mono text-xs uppercase tracking-widest text-ink-soft">Title</label>
             <input
+              id="post-title"
               required
               value={form.title}
               onChange={(e) => handleTitleChange(e.target.value)}
@@ -131,8 +132,9 @@ export default function AdminPostEditor() {
             />
           </div>
           <div>
-            <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">Slug</label>
+            <label htmlFor="post-slug" className="font-mono text-xs uppercase tracking-widest text-ink-soft">Slug</label>
             <input
+              id="post-slug"
               required
               value={form.slug}
               disabled={isEditing}
@@ -149,8 +151,9 @@ export default function AdminPostEditor() {
         </div>
 
         <div>
-          <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">Excerpt</label>
+          <label htmlFor="post-excerpt" className="font-mono text-xs uppercase tracking-widest text-ink-soft">Excerpt</label>
           <textarea
+            id="post-excerpt"
             required
             rows={2}
             value={form.excerpt}
@@ -161,10 +164,11 @@ export default function AdminPostEditor() {
 
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+            <label htmlFor="post-tags" className="font-mono text-xs uppercase tracking-widest text-ink-soft">
               Tags <span className="normal-case text-ink-soft/70">(comma separated)</span>
             </label>
             <input
+              id="post-tags"
               value={form.tags}
               onChange={(e) => setForm((prev) => ({ ...prev, tags: e.target.value }))}
               placeholder="offline-first, hardware"
@@ -172,10 +176,11 @@ export default function AdminPostEditor() {
             />
           </div>
           <div>
-            <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+            <label htmlFor="post-categories" className="font-mono text-xs uppercase tracking-widest text-ink-soft">
               Categories <span className="normal-case text-ink-soft/70">(comma separated)</span>
             </label>
             <input
+              id="post-categories"
               value={form.categories}
               onChange={(e) => setForm((prev) => ({ ...prev, categories: e.target.value }))}
               placeholder="Engineering"
@@ -186,7 +191,7 @@ export default function AdminPostEditor() {
 
         <div>
           <div className="flex items-center justify-between">
-            <label className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+            <label htmlFor="post-markdown" className="font-mono text-xs uppercase tracking-widest text-ink-soft">
               Body (Markdown)
             </label>
             <button
@@ -199,6 +204,7 @@ export default function AdminPostEditor() {
           </div>
           <div className={`mt-2 grid gap-4 ${showPreview ? 'sm:grid-cols-2' : ''}`}>
             <textarea
+              id="post-markdown"
               required
               rows={16}
               value={form.markdown}
@@ -237,7 +243,7 @@ export default function AdminPostEditor() {
           >
             {saving ? 'Saving…' : isEditing ? 'Save changes' : 'Create post'}
           </button>
-          {error && <p className="text-sm text-soil">{error}</p>}
+          {error && <p role="alert" className="text-sm text-soil">{error}</p>}
         </div>
       </form>
     </div>

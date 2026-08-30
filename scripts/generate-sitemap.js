@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const postsDir = path.join(root, 'src/content/posts')
 
-const staticRoutes = ['/', '/about', '/projects', '/blog', '/contact']
+const staticRoutes = ['/', '/about', '/projects', '/blog', '/contact', '/privacy', '/terms']
 
 const postSlugs = readdirSync(postsDir)
   .filter((file) => file.endsWith('.md'))
