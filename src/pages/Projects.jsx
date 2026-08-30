@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { projects } from '../content/projects.js'
 import useReveal from '../lib/useReveal.js'
+import Seo from '../components/Seo.jsx'
 
 const categories = ['All', ...new Set(projects.map((p) => p.category))]
 
@@ -16,6 +17,11 @@ export default function Projects() {
 
   return (
     <>
+      <Seo
+        title="Projects"
+        description="Case studies in software, sensors and digital transformation for dairy cooperatives and grain storage operations across Nepal."
+        path="/projects"
+      />
       <section className="mx-auto max-w-6xl px-6 pb-10 pt-20 sm:px-10">
         <p className="font-mono text-xs uppercase tracking-widest text-leaf">Projects</p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-medium text-ink sm:text-4xl">

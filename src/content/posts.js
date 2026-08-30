@@ -1,55 +1,35 @@
 /**
- * Blog content. PLACEHOLDER COPY — swap in real posts before launch.
- * `body` is markdown, rendered with `marked` in BlogPost.jsx.
+ * Blog content, loaded from the markdown files in ./posts/*.md at build
+ * time. Each file's frontmatter (title, slug, date, excerpt, tags,
+ * categories, published) plus its markdown body become one post object.
+ *
+ * New posts are added by committing a new .md file here — either by hand,
+ * or via the admin dashboard at /admin, which commits directly to this
+ * repo through the GitHub API (see functions/api/admin/).
+ *
+ * Only posts with `published: true` are included in the site build.
  */
-export const posts = [
-  {
-    slug: 'what-offline-first-actually-means-on-a-farm',
-    title: 'What "offline-first" actually means on a farm',
-    date: '2025-03-14',
-    excerpt:
-      'Connectivity on a working farm is not a straight line — it is patchy, seasonal and sometimes gone for days. Here is how we design around that instead of around it.',
-    body: `Most software gets built assuming a stable connection, then has "offline mode" added as an afterthought — a banner that says *you are offline*, and not much else.
+import { parseFrontmatter } from '../lib/frontmatter.js'
 
-That does not hold up on a working farm. Connectivity is patchy, weather-dependent, and sometimes gone for days during the monsoon. If the system stops working the moment the signal drops, it was never really built for the field.
+const files = import.meta.glob('./posts/*.md', { eager: true, query: '?raw', import: 'default' })
 
-## What we do differently
-
-Every record — a breeding event, a moisture reading, a delivery — is written to the device first, full stop. Syncing to the server is a background concern the person entering data should never have to think about.
-
-That single decision changes almost everything else about how the system is built: conflict resolution, storage limits on cheap devices, and how we test. It is slower to build. It is also the only version that actually gets used six months in.`,
-  },
-  {
-    slug: 'sensors-are-the-easy-part',
-    title: 'Sensors are the easy part',
-    date: '2025-01-22',
-    excerpt:
-      'Installing a moisture sensor takes an afternoon. Getting a warehouse manager to trust the number it reports takes months. Here is what that trust actually requires.',
-    body: `Every hardware project we run has the same shape: the installation is the fast part. Mounting sensors, wiring power, confirming readings — a day, maybe two per site.
-
-The slow part is trust. A warehouse manager who has spent fifteen years reading grain moisture by hand is not going to hand that judgment over to a number on a screen because we installed one.
-
-## Earning it
-
-We do not ask for trust up front. For the first month on every install, the sensor readings run alongside the manual process, not instead of it. The manager checks both. When the numbers agree — and they almost always do — the manual check quietly stops being necessary.
-
-Skipping this step does not save time. It just moves the resistance to later, when it is harder to work through.`,
-  },
-  {
-    slug: 'why-we-build-in-nepali-first',
-    title: 'Why we build in Nepali first, English second',
-    date: '2024-11-05',
-    excerpt:
-      'Most farm software is designed in English and translated later, if at all. We build the other way around — and it changes decisions you would not expect.',
-    body: `Language is not a settings toggle you add at the end. It shapes the interface itself.
-
-When we design a screen in Nepali first, the questions change. Which unit is the natural one for this measurement — the one a herder already uses, not the one a spec sheet defaults to? Does this label make sense read aloud in a cowshed, not just glanced at on a desk?
-
-## The English version comes second
-
-Once the Nepali-first version works for the person actually using it daily, we build the English interface for the owner, the investor report, or the partner organisation reviewing the data. It is the same system, but the primary user was never an afterthought.`,
-  },
-]
+export const posts = Object.entries(files)
+  .map(([path, raw]) => {
+    const { data, body } = parseFrontmatter(raw)
+    const slug = data.slug || path.split('/').pop().replace(/\.md$/, '')
+    return {
+      slug,
+      title: data.title || slug,
+      date: data.date || '1970-01-01',
+      excerpt: data.excerpt || '',
+      tags: data.tags || [],
+      categories: data.categories || [],
+      published: data.published !== false,
+      body,
+    }
+  })
+  .filter((post) => post.published)
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
 
 export function getPostBySlug(slug) {
   return posts.find((post) => post.slug === slug)

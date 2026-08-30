@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import LeafGrid from '../components/LeafGrid.jsx'
 import useReveal from '../lib/useReveal.js'
+import Seo from '../components/Seo.jsx'
 
 const values = [
   {
@@ -23,6 +24,11 @@ export default function About() {
 
   return (
     <>
+      <Seo
+        title="About"
+        description="Rubisco Tech is a Nepal-based team building software, sensors and digital transformation for dairy and grain operations — work that starts on the ground."
+        path="/about"
+      />
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 sm:px-10 sm:py-24 lg:grid-cols-[1.1fr_1fr]">
           <div>

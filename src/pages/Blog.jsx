@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { posts } from '../content/posts.js'
 import useReveal from '../lib/useReveal.js'
+import Seo from '../components/Seo.jsx'
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString('en-US', {
@@ -15,6 +16,11 @@ export default function Blog() {
 
   return (
     <>
+      <Seo
+        title="Blog"
+        description="What we learn building software and hardware for working farms — written plainly, without the buzzwords."
+        path="/blog"
+      />
       <section className="mx-auto max-w-6xl px-6 pb-10 pt-20 sm:px-10">
         <p className="font-mono text-xs uppercase tracking-widest text-leaf">Blog</p>
         <h1 className="mt-3 font-display text-3xl font-medium text-ink sm:text-4xl">

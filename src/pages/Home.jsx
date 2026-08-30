@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import LeafGrid from '../components/LeafGrid.jsx'
 import useReveal from '../lib/useReveal.js'
+import Seo from '../components/Seo.jsx'
 
 const pillars = [
   {
@@ -26,6 +27,11 @@ export default function Home() {
 
   return (
     <>
+      <Seo
+        title="Software, sensors & systems for dairy and grain farms"
+        description="Rubisco Tech builds offline-first software, IoT sensors and end-to-end digital transformation for dairy and grain farming operations in Nepal."
+        path="/"
+      />
       {/* Hero — deliberately quiet. One line, one motif, one path forward. */}
       <section className="relative overflow-hidden">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 py-20 sm:px-10 sm:py-28 lg:grid-cols-[1.1fr_1fr] lg:py-32">

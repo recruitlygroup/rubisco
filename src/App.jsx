@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import SiteLayout from './layouts/SiteLayout.jsx'
+import AdminLayout from './layouts/AdminLayout.jsx'
 import Home from './pages/Home.jsx'
 import Projects from './pages/Projects.jsx'
 import ProjectDetail from './pages/ProjectDetail.jsx'
@@ -8,6 +9,9 @@ import BlogPost from './pages/BlogPost.jsx'
 import About from './pages/About.jsx'
 import Contact from './pages/Contact.jsx'
 import NotFound from './pages/NotFound.jsx'
+import AdminLogin from './pages/admin/AdminLogin.jsx'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+import AdminPostEditor from './pages/admin/AdminPostEditor.jsx'
 
 export default function App() {
   return (
@@ -21,6 +25,13 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
+      </Route>
+
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/new" element={<AdminPostEditor />} />
+        <Route path="/admin/edit/:slug" element={<AdminPostEditor />} />
       </Route>
     </Routes>
   )

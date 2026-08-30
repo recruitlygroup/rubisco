@@ -1,3 +1,17 @@
 name = "rubisco-tech"
 compatibility_date = "2024-11-01"
 pages_build_output_dir = "dist"
+
+# Optional extra layer of protection for functions/api/contact.js, on top of
+# the honeypot + minimum-fill-time checks that always run. Cloudflare's
+# Workers Rate Limiting is free and works on Pages Functions too.
+#
+# To enable: uncomment below, then in the Cloudflare dashboard go to
+# Workers & Pages → rubisco-tech → Settings → Functions → and add a
+# "Rate limiting" binding named CONTACT_RATE_LIMITER (this generates the
+# namespace_id for you — copy it in below). Redeploy after.
+#
+# [[ratelimits]]
+# name = "CONTACT_RATE_LIMITER"
+# namespace_id = "REPLACE_WITH_ID_FROM_DASHBOARD"
+# simple = { limit = 5, period = 60 }

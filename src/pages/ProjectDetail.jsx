@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getProjectBySlug, projects } from '../content/projects.js'
 import NotFound from './NotFound.jsx'
+import Seo from '../components/Seo.jsx'
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -13,6 +14,7 @@ export default function ProjectDetail() {
 
   return (
     <>
+      <Seo title={project.title} description={project.summary} path={`/projects/${project.slug}`} />
       <section className="mx-auto max-w-3xl px-6 pt-20 sm:px-10">
         <Link
           to="/projects"

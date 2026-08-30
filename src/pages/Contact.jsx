@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Seo from '../components/Seo.jsx'
 
 const fields = [
   { name: 'name', label: 'Name', type: 'text', autoComplete: 'name' },
@@ -6,11 +7,15 @@ const fields = [
   { name: 'organisation', label: 'Farm / organisation', type: 'text', autoComplete: 'organization' },
 ]
 
-const initialState = { name: '', email: '', organisation: '', message: '' }
+const initialState = { name: '', email: '', organisation: '', message: '', website: '' }
 
 export default function Contact() {
   const [values, setValues] = useState(initialState)
   const [status, setStatus] = useState('idle') // idle | submitting | sent | error
+  const [errorMessage, setErrorMessage] = useState('')
+  // Timestamp the form became visible — used server-side as a lightweight
+  // anti-spam signal (bots tend to submit implausibly fast).
+  const [formLoadedAt] = useState(() => Date.now())
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -20,37 +25,56 @@ export default function Contact() {
   async function handleSubmit(event) {
     event.preventDefault()
     setStatus('submitting')
+    setErrorMessage('')
 
     try {
-      // TODO: wire this up to a real endpoint — a Cloudflare Pages
-      // Function, Formspree, or your own API. Right now this only
-      // simulates a submission so the UI/UX is complete and ready
-      // to connect.
-      await new Promise((resolve) => setTimeout(resolve, 600))
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...values,
+          formLoadedAt,
+        }),
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        setErrorMessage(data.error || 'Something went wrong — please try again.')
+        setStatus('error')
+        return
+      }
+
       setStatus('sent')
       setValues(initialState)
     } catch {
+      setErrorMessage('Something went wrong — please try again.')
       setStatus('error')
     }
   }
 
   if (status === 'sent') {
     return (
-      <section className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-10">
-        <p className="font-mono text-xs uppercase tracking-widest text-leaf">Contact</p>
-        <h1 className="mt-3 font-display text-3xl font-medium text-ink">
-          Message received.
-        </h1>
-        <p className="mt-4 text-ink-soft">
-          We reply to every message ourselves, usually within a couple of
-          working days. Thanks for reaching out.
-        </p>
-      </section>
+      <>
+        <Seo title="Contact" description="Tell us about your farm or operation and what isn't working right now." path="/contact" />
+        <section className="mx-auto max-w-2xl px-6 py-24 text-center sm:px-10">
+          <p className="font-mono text-xs uppercase tracking-widest text-leaf">Contact</p>
+          <h1 className="mt-3 font-display text-3xl font-medium text-ink">
+            Message received.
+          </h1>
+          <p className="mt-4 text-ink-soft">
+            We reply to every message ourselves, usually within a couple of
+            working days. Thanks for reaching out.
+          </p>
+        </section>
+      </>
     )
   }
 
   return (
-    <section className="mx-auto max-w-5xl px-6 py-20 sm:px-10">
+    <>
+      <Seo title="Contact" description="Tell us about your farm or operation and what isn't working right now." path="/contact" />
+      <section className="mx-auto max-w-5xl px-6 py-20 sm:px-10">
       <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
         <div>
           <p className="font-mono text-xs uppercase tracking-widest text-leaf">Contact</p>
@@ -90,6 +114,21 @@ export default function Contact() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Honeypot field — hidden from sighted users and screen readers,
+              but visible to most bots that blindly fill in every field. */}
+          <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+            <label htmlFor="website">Leave this field empty</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={values.website}
+              onChange={handleChange}
+            />
+          </div>
+
           <div className="grid gap-6 sm:grid-cols-2">
             {fields.slice(0, 2).map((field) => (
               <FormField
@@ -136,7 +175,7 @@ export default function Contact() {
 
           {status === 'error' && (
             <p className="text-sm text-soil">
-              Something went wrong — please email us directly at{' '}
+              {errorMessage || 'Something went wrong.'} You can also email us directly at{' '}
               <a href="mailto:hello@rubisco.tech" className="underline">
                 hello@rubisco.tech
               </a>
@@ -146,6 +185,7 @@ export default function Contact() {
         </form>
       </div>
     </section>
+    </>
   )
 }
 
