@@ -29,7 +29,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "rubisco-invoices"
-database_id = "REPLACE_WITH_ID_FROM_DASHBOARD"
+database_id = "fa7ad628-33f4-4971-9e46-0d7d73fd8897"
 migrations_dir = "migrations"
 
 # Also set these as secrets/vars (Cloudflare dashboard -> Pages project ->
