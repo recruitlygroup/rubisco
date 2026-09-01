@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { marked } from 'marked'
-import { getPostBySlug } from '../content/posts.js'
+import { getPostBySlug } from '../lib/posts.js'
 import NotFound from './NotFound.jsx'
 import Seo from '../components/Seo.jsx'
 
