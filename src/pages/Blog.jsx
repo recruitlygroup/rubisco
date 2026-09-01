@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { posts } from '../content/posts.js'
+import { posts } from '../lib/posts.js'
 import useReveal from '../lib/useReveal.js'
 import Seo from '../components/Seo.jsx'
 
