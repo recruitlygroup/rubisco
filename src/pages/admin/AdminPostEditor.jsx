@@ -165,7 +165,7 @@ export default function AdminPostEditor() {
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
             <label htmlFor="post-tags" className="font-mono text-xs uppercase tracking-widest text-ink-soft">
-              Tags <span className="normal-case text-ink-soft/70">(comma separated)</span>
+              Tags <span className="normal-case text-ink-faint">(comma separated)</span>
             </label>
             <input
               id="post-tags"
@@ -177,7 +177,7 @@ export default function AdminPostEditor() {
           </div>
           <div>
             <label htmlFor="post-categories" className="font-mono text-xs uppercase tracking-widest text-ink-soft">
-              Categories <span className="normal-case text-ink-soft/70">(comma separated)</span>
+              Categories <span className="normal-case text-ink-faint">(comma separated)</span>
             </label>
             <input
               id="post-categories"
