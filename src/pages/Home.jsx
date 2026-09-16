@@ -1,21 +1,30 @@
-import { Link } from 'react-router-dom'
 import LeafGrid from '../components/LeafGrid.jsx'
 import useReveal from '../lib/useReveal.js'
 import Seo from '../components/Seo.jsx'
+import Button from '../components/ui/Button.jsx'
+import StatCard from '../components/ui/StatCard.jsx'
+import ServiceCard from '../components/ui/ServiceCard.jsx'
 
-const pillars = [
+const stats = [
+  { value: '12', label: 'Farms running our systems' },
+  { value: '3', label: 'Districts covered' },
+  { value: '40k+', label: 'Litres tracked daily' },
+  { value: '2019', label: 'Building in Nepal since' },
+]
+
+const services = [
   {
-    label: '01',
+    number: '01',
     title: 'Software for the farm',
     body: 'Herd, pasture and yield systems built for how a farm actually runs — not a generic dashboard bolted on afterward.',
   },
   {
-    label: '02',
+    number: '02',
     title: 'Sensors & hardware',
     body: 'IoT sensors, monitoring hardware and automation we design, source, install and keep running.',
   },
   {
-    label: '03',
+    number: '03',
     title: 'Consulting',
     body: 'End-to-end digital transformation for dairies and grain operations, from first sensor to full rollout.',
   },
@@ -48,20 +57,12 @@ export default function Home() {
               end.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Link
-                to="/projects"
-                className="inline-flex items-center gap-2 border border-ink bg-ink px-6 py-3 font-mono text-sm text-milk transition-colors hover:border-leaf hover:bg-leaf"
-              >
+              <Button to="/projects" variant="primary">
                 See our work
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 font-mono text-sm text-ink-soft transition-colors hover:text-leaf"
-              >
+              </Button>
+              <Button to="/contact" variant="ghost">
                 How we work
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
+              </Button>
             </div>
           </div>
 
@@ -77,20 +78,8 @@ export default function Home() {
         {/* Proof strip — replace figures with real ones when ready */}
         <div className="border-t border-line/70">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4 sm:px-10">
-            {[
-              { value: '12', label: 'Farms running our systems' },
-              { value: '3', label: 'Districts covered' },
-              { value: '40k+', label: 'Litres tracked daily' },
-              { value: '2019', label: 'Building in Nepal since' },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <p className="font-display text-2xl font-medium text-mustard-dark sm:text-3xl">
-                  {stat.value}
-                </p>
-                <p className="mt-1 text-xs leading-snug text-ink-soft">
-                  {stat.label}
-                </p>
-              </div>
+            {stats.map((stat) => (
+              <StatCard key={stat.label} value={stat.value} label={stat.label} />
             ))}
           </div>
         </div>
@@ -100,16 +89,13 @@ export default function Home() {
       <section ref={pillarsRef} className="reveal border-t border-line/70">
         <div className="mx-auto max-w-6xl px-6 py-20 sm:px-10">
           <div className="grid gap-10 sm:grid-cols-3">
-            {pillars.map((pillar) => (
-              <div key={pillar.label}>
-                <p className="font-mono text-xs text-mustard-dark">{pillar.label}</p>
-                <h3 className="mt-3 font-display text-xl font-medium text-ink">
-                  {pillar.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  {pillar.body}
-                </p>
-              </div>
+            {services.map((service) => (
+              <ServiceCard
+                key={service.number}
+                number={service.number}
+                title={service.title}
+                body={service.body}
+              />
             ))}
           </div>
         </div>
@@ -122,13 +108,9 @@ export default function Home() {
             Building a dream farm? Let&rsquo;s talk.
           </h2>
           <div className="mt-7">
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-ink px-6 py-3 font-mono text-sm text-ink transition-colors hover:border-leaf hover:bg-leaf hover:text-milk"
-            >
+            <Button to="/contact" variant="secondary">
               Get in touch
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
+            </Button>
           </div>
         </div>
       </section>
