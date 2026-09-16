@@ -25,9 +25,17 @@
   --color-leaf-dark: #2c4e30;
   --color-mustard: #d9a441;
   --color-mustard-dark: #a97a22;
+  /* AA-compliant variant of mustard for small/body text (4.5:1+ on paper
+     and milk). --color-mustard-dark stays as-is for large text, chips and
+     backgrounds where the 3:1 large-text/UI-component threshold applies. */
+  --color-mustard-text: #7d5614;
   --color-milk: #fafaf7;
   --color-soil: #6b4a34;
   --color-line: #c9cdb8;
+  /* Solid (non-opacity) tertiary text color. Replaces the old ink-soft/70
+     pattern, which measured ~3.2:1 on paper and failed WCAG AA for
+     metadata/timestamps/secondary labels. 5.3:1+ on both paper and milk. */
+  --color-ink-faint: #54655a;
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -75,6 +83,56 @@ body {
     transform: none;
     transition: none;
   }
+}
+
+/*
+  Shared micro-interaction utilities. Kept as a handful of small,
+  composable classes rather than a motion library dependency — consistent
+  with the rest of the project's "no dependency we don't need" approach.
+*/
+.hover-lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.hover-lift:hover,
+.hover-lift:focus-within {
+  transform: translateY(-4px);
+}
+
+.sparkline path {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: stroke-dashoffset 0.9s ease;
+}
+.group:hover .sparkline path,
+.group:focus-within .sparkline path,
+.group:focus .sparkline path,
+.sparkline.is-visible path {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .hover-lift:hover,
+  .hover-lift:focus-within {
+    transform: none;
+  }
+  .sparkline path {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+/* Photo wash — a consistent duotone-ish overlay so sourced photography
+   reads as part of the Rubisco palette rather than a stock-photo drop-in. */
+.photo-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22, 36, 27, 0.05) 0%, rgba(22, 36, 27, 0.55) 100%);
+}
+.photo-wash-soft {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22, 36, 27, 0) 40%, rgba(22, 36, 27, 0.75) 100%);
 }
 
 /*
