@@ -59,26 +59,52 @@ export default function Projects() {
             <Link
               key={project.slug}
               to={`/projects/${project.slug}`}
-              className="group flex flex-col justify-between bg-paper p-8 transition-colors hover:bg-milk"
+              className="hover-lift group flex flex-col justify-between bg-paper transition-colors hover:bg-milk"
             >
-              <div>
-                <div className="flex items-center justify-between">
-                  <p className="font-mono text-xs uppercase tracking-widest text-mustard-dark">
-                    {project.category}
-                  </p>
-                  <p className="font-mono text-xs text-ink-soft">{project.year}</p>
+              {project.image && (
+                <div className="relative h-44 w-full overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.imageAlt || ''}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="photo-wash-soft" aria-hidden="true" />
+                  {project.badges?.length > 0 && (
+                    <div className="absolute inset-x-0 bottom-0 flex flex-wrap gap-1.5 p-3">
+                      {project.badges.map((badge) => (
+                        <span
+                          key={badge.label}
+                          className="border border-milk/40 bg-ink/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wide text-milk backdrop-blur-sm"
+                        >
+                          {badge.label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <h2 className="mt-4 font-display text-xl font-medium leading-snug text-ink group-hover:text-leaf">
-                  {project.title}
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  {project.summary}
+              )}
+
+              <div className="flex flex-1 flex-col justify-between p-8">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <p className="font-mono text-xs uppercase tracking-widest text-mustard-text">
+                      {project.category}
+                    </p>
+                    <p className="font-mono text-xs text-ink-faint">{project.year}</p>
+                  </div>
+                  <h2 className="mt-4 font-display text-xl font-medium leading-snug text-ink group-hover:text-leaf">
+                    {project.title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+                    {project.summary}
+                  </p>
+                </div>
+                <p className="mt-6 inline-flex items-center gap-2 font-mono text-xs text-ink-soft group-hover:text-leaf">
+                  Read case study
+                  <span aria-hidden="true">&rarr;</span>
                 </p>
               </div>
-              <p className="mt-6 inline-flex items-center gap-2 font-mono text-xs text-ink-soft group-hover:text-leaf">
-                Read case study
-                <span aria-hidden="true">&rarr;</span>
-              </p>
             </Link>
           ))}
 
