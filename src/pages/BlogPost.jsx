@@ -4,6 +4,7 @@ import { marked } from 'marked'
 import { getPostBySlug } from '../lib/posts.js'
 import NotFound from './NotFound.jsx'
 import Seo from '../components/Seo.jsx'
+import { SITE_URL, SITE_NAME } from '../lib/site.js'
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString('en-US', {
@@ -18,11 +19,31 @@ export default function BlogPost() {
 
   const html = useMemo(() => (post ? marked.parse(post.body) : ''), [post])
 
+  const articleJsonLd = useMemo(() => {
+    if (!post) return undefined
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.excerpt,
+      datePublished: post.date || undefined,
+      dateModified: post.date || undefined,
+      author: { '@type': 'Person', name: post.author },
+      publisher: { '@type': 'Organization', name: SITE_NAME },
+      mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    }
+  }, [post])
+
   if (!post) return <NotFound />
 
   return (
     <article className="mx-auto max-w-2xl px-6 py-20 sm:px-10">
-      <Seo title={post.title} description={post.excerpt} path={`/blog/${post.slug}`} />
+      <Seo
+        title={post.title}
+        description={post.excerpt}
+        path={`/blog/${post.slug}`}
+        jsonLd={articleJsonLd}
+      />
       <Link
         to="/blog"
         className="inline-flex items-center gap-2 font-mono text-xs text-ink-soft hover:text-leaf"
@@ -31,7 +52,13 @@ export default function BlogPost() {
         All articles
       </Link>
 
-      <p className="mt-6 font-mono text-xs text-ink-soft">{formatDate(post.date)}</p>
+      <p className="mt-6 font-mono text-xs text-ink-soft">
+        {formatDate(post.date)}
+        <span aria-hidden="true"> &middot; </span>
+        {post.author}
+        <span aria-hidden="true"> &middot; </span>
+        {post.readingTime} min read
+      </p>
       <h1 className="mt-3 font-display text-3xl font-medium leading-tight text-ink sm:text-4xl">
         {post.title}
       </h1>
