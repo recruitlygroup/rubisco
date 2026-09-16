@@ -12,6 +12,14 @@ export const projects = [
     title: 'A herd management system for a 400-cow dairy',
     client: 'Himal Dairy Cooperative',
     location: 'Sindhuli, Nepal',
+    image:
+      'https://images.unsplash.com/photo-1666878125618-ed3dddd1ab36?q=80&w=1600&auto=format&fit=crop',
+    imageAlt: 'A herd of dairy cows in a barn, photographed at a working dairy farm',
+    imageCredit: 'Photo: Neil Bates / Unsplash',
+    badges: [
+      { label: '400+ cows syncing' },
+      { label: '31% fewer missed windows' },
+    ],
     summary:
       'Replaced paper herd registers with a system built around how the herders actually work — offline-first, Nepali-language, usable on a shared shop-floor tablet.',
     stats: [
@@ -41,6 +49,14 @@ export const projects = [
     title: 'Grain-store moisture sensing across four warehouses',
     client: 'Terai Grain Storage Ltd.',
     location: 'Terai region, Nepal',
+    image:
+      'https://images.unsplash.com/photo-1627052428109-576e839d100a?q=80&w=1600&auto=format&fit=crop',
+    imageAlt: 'Tall metal grain storage silos against a clear blue sky',
+    imageCredit: 'Photo: Grant Ritchie / Unsplash',
+    badges: [
+      { label: '60+ sensors live' },
+      { label: '~18% less spoilage' },
+    ],
     summary:
       'Designed, installed and maintain a low-power sensor network monitoring grain moisture and temperature, cutting spoilage losses that used to be caught too late.',
     stats: [
@@ -70,6 +86,14 @@ export const projects = [
     title: 'End-to-end digital rollout for a farming cooperative',
     client: 'Kavre Farmers Cooperative',
     location: 'Kavrepalanchok, Nepal',
+    image:
+      'https://images.unsplash.com/photo-1718179620334-b1d5056ed607?q=80&w=1600&auto=format&fit=crop',
+    imageAlt: 'Terraced rice fields on a hillside with mountains in the background, Nepal',
+    imageCredit: 'Photo: Martin Skřivánek / Unsplash',
+    badges: [
+      { label: '200+ farmers onboarded' },
+      { label: '5 systems, 1 dashboard' },
+    ],
     summary:
       'A phased transformation — from first sensor to full staff training — bringing a 200-member cooperative onto a single digital system for records, payments and reporting.',
     stats: [
