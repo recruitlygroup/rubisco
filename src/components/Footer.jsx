@@ -14,7 +14,7 @@ export default function Footer() {
             </p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">
               Software, sensors and systems for dairy and grain farms.
-              Registered in Bhaktapur, Nepal.
+              Registered at Suryabinayak-04, Bhaktapur, Nepal.
             </p>
           </div>
 
@@ -40,7 +40,8 @@ export default function Footer() {
                   hello@rubisco.tech
                 </a>
               </li>
-              <li className="text-ink-soft">Sindhuli, Nepal</li>
+              <li className="text-ink-soft">Suryabinayak-04, Bhaktapur, Nepal</li>
+              <li className="text-ink-soft">Field operations: Sindhuli, Nepal</li>
             </ul>
           </div>
         </div>
