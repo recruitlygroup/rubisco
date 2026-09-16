@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom'
 import LeafGrid from '../components/LeafGrid.jsx'
 import useReveal from '../lib/useReveal.js'
 import Seo from '../components/Seo.jsx'
+import Button from '../components/ui/Button.jsx'
+import ServiceCard from '../components/ui/ServiceCard.jsx'
 
 const values = [
   {
@@ -63,14 +64,7 @@ export default function About() {
           </p>
           <div className="mt-8 grid gap-10 sm:grid-cols-3">
             {values.map((value) => (
-              <div key={value.title}>
-                <h3 className="font-display text-lg font-medium text-ink">
-                  {value.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  {value.body}
-                </p>
-              </div>
+              <ServiceCard key={value.title} title={value.title} body={value.body} />
             ))}
           </div>
         </div>
@@ -82,10 +76,10 @@ export default function About() {
             Registered &amp; based
           </p>
           <p className="mt-3 max-w-xl leading-relaxed text-ink-soft">
-            Rubisco Tech Pvt. Ltd. is registered in Bhaktapur, Nepal, with
-            field operations based out of Sindhuli. We work directly with
-            cooperatives, private dairies and grain storage operators across
-            the country.
+            Rubisco Tech Pvt. Ltd. is registered at Suryabinayak-04,
+            Bhaktapur, Nepal, with field operations based out of Sindhuli. We
+            work directly with cooperatives, private dairies and grain
+            storage operators across the country.
           </p>
         </div>
       </section>
@@ -96,20 +90,12 @@ export default function About() {
             Want to see how we work up close?
           </h2>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 border border-ink bg-ink px-6 py-3 font-mono text-sm text-milk transition-colors hover:border-leaf hover:bg-leaf"
-            >
+            <Button to="/projects" variant="primary">
               See our work
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 font-mono text-sm text-ink-soft hover:text-leaf"
-            >
+            </Button>
+            <Button to="/contact" variant="ghost">
               Get in touch
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
+            </Button>
           </div>
         </div>
       </section>
