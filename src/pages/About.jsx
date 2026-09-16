@@ -59,7 +59,7 @@ export default function About() {
 
       <section ref={valuesRef} className="reveal border-t border-line/70">
         <div className="mx-auto max-w-6xl px-6 py-20 sm:px-10">
-          <p className="font-mono text-xs uppercase tracking-widest text-mustard-dark">
+          <p className="font-mono text-xs uppercase tracking-widest text-mustard-text">
             How we work
           </p>
           <div className="mt-8 grid gap-10 sm:grid-cols-3">
