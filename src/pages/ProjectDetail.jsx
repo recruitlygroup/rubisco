@@ -17,6 +17,23 @@ export default function ProjectDetail() {
   return (
     <>
       <Seo title={project.title} description={project.summary} path={`/projects/${project.slug}`} />
+
+      {project.image && (
+        <div className="relative h-56 w-full overflow-hidden sm:h-72 lg:h-80">
+          <img
+            src={project.image}
+            alt={project.imageAlt || ''}
+            className="h-full w-full object-cover"
+          />
+          <div className="photo-wash" aria-hidden="true" />
+          {project.imageCredit && (
+            <p className="absolute bottom-2 right-3 font-mono text-[10px] text-milk/80">
+              {project.imageCredit}
+            </p>
+          )}
+        </div>
+      )}
+
       <section className="mx-auto max-w-3xl px-6 pt-20 sm:px-10">
         <Link
           to="/projects"
@@ -27,11 +44,11 @@ export default function ProjectDetail() {
         </Link>
 
         <div className="mt-6 flex items-center gap-3">
-          <p className="font-mono text-xs uppercase tracking-widest text-mustard-dark">
+          <p className="font-mono text-xs uppercase tracking-widest text-mustard-text">
             {project.category}
           </p>
           <span className="h-1 w-1 rounded-full bg-line" />
-          <p className="font-mono text-xs text-ink-soft">{project.year}</p>
+          <p className="font-mono text-xs text-ink-faint">{project.year}</p>
         </div>
 
         <h1 className="mt-4 font-display text-3xl font-medium leading-tight text-ink sm:text-4xl">
