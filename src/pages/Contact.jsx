@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Seo from '../components/Seo.jsx'
+import Button from '../components/ui/Button.jsx'
 
 const fields = [
   { name: 'name', label: 'Name', type: 'text', autoComplete: 'name' },
@@ -117,7 +118,9 @@ export default function Contact() {
               <dt className="font-mono text-xs uppercase tracking-widest text-ink-soft">
                 Registered as
               </dt>
-              <dd className="mt-1 text-ink">Rubisco Tech Pvt. Ltd., Bhaktapur</dd>
+              <dd className="mt-1 text-ink">
+                Rubisco Tech Pvt. Ltd., Suryabinayak-04, Bhaktapur, Nepal
+              </dd>
             </div>
           </dl>
         </div>
@@ -173,14 +176,9 @@ export default function Contact() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={status === 'submitting'}
-            className="inline-flex items-center gap-2 border border-ink bg-ink px-6 py-3 font-mono text-sm text-milk transition-colors hover:border-leaf hover:bg-leaf disabled:cursor-wait disabled:opacity-60"
-          >
+          <Button type="submit" variant="primary" disabled={status === 'submitting'} arrow={status !== 'submitting'}>
             {status === 'submitting' ? 'Sending…' : 'Send message'}
-            <span aria-hidden="true">&rarr;</span>
-          </button>
+          </Button>
 
           {status === 'error' && (
             <p role="alert" className="text-sm text-soil">
