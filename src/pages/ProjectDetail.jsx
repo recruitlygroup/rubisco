@@ -2,6 +2,8 @@ import { Link, useParams } from 'react-router-dom'
 import { getProjectBySlug, projects } from '../content/projects.js'
 import NotFound from './NotFound.jsx'
 import Seo from '../components/Seo.jsx'
+import Button from '../components/ui/Button.jsx'
+import StatCard from '../components/ui/StatCard.jsx'
 
 export default function ProjectDetail() {
   const { slug } = useParams()
@@ -51,12 +53,7 @@ export default function ProjectDetail() {
       <section className="mx-auto max-w-3xl px-6 py-12 sm:px-10">
         <div className="grid grid-cols-3 gap-6 border-b border-line/70 pb-12">
           {project.stats.map((stat) => (
-            <div key={stat.label}>
-              <p className="font-display text-2xl font-medium text-leaf sm:text-3xl">
-                {stat.value}
-              </p>
-              <p className="mt-1 text-xs leading-snug text-ink-soft">{stat.label}</p>
-            </div>
+            <StatCard key={stat.label} value={stat.value} label={stat.label} size="lg" />
           ))}
         </div>
 
@@ -85,13 +82,9 @@ export default function ProjectDetail() {
               {next.title}
             </Link>
           </div>
-          <Link
-            to="/contact"
-            className="inline-flex shrink-0 items-center gap-2 border border-ink px-6 py-3 font-mono text-sm text-ink transition-colors hover:border-leaf hover:bg-leaf hover:text-milk"
-          >
+          <Button to="/contact" variant="secondary" className="shrink-0">
             Start a project
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
+          </Button>
         </div>
       </section>
     </>
