@@ -37,7 +37,7 @@ export default function Footer() {
             <ul className="mt-3 space-y-2 text-sm">
               <li>
                 <a href="mailto:hello@rubisco.tech" className="hover:text-leaf">
-                  hello@rubisco.tech
+                  info@rubisco.com.np
                 </a>
               </li>
               <li className="text-ink-soft">Suryabinayak-04, Bhaktapur, Nepal</li>
