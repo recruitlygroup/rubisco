@@ -24,7 +24,7 @@ export default function useReveal(options = {}) {
           observer.unobserve(node)
         }
       },
-      { threshold: 0.15, ...options },
+      { threshold: 0, ...options },
     )
 
     observer.observe(node)
