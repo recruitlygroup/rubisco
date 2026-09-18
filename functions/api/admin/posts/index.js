@@ -1,5 +1,5 @@
 import { isAuthenticated } from '../../../_lib/session.js'
-import { ghListDir, ghGetFile, ghPutFile } from '../../../_lib/github.js'
+import { ghListDirWithContent, ghGetFile, ghPutFile } from '../../../_lib/github.js'
 import { parseFrontmatter, serializeFrontmatter } from '../../../../src/lib/frontmatter.js'
 
 const PUBLISHED_DIR = 'src/content/posts'
@@ -26,35 +26,57 @@ export async function onRequestGet({ request, env }) {
   }
 
   try {
+    // One GraphQL call per directory (not one REST call per file) -- see
+    // the comment on ghListDirWithContent. This is what keeps the request
+    // count flat as the number of posts grows.
     const [publishedFiles, draftFiles] = await Promise.all([
-      ghListDir(env, PUBLISHED_DIR),
-      ghListDir(env, DRAFTS_DIR),
+      ghListDirWithContent(env, PUBLISHED_DIR),
+      ghListDirWithContent(env, DRAFTS_DIR),
     ])
 
-    const load = async (entry, status) => {
-      const file = await ghGetFile(env, entry.path)
-      const { data } = parseFrontmatter(file.content)
-      return {
-        slug: data.slug || entry.name.replace(/\.md$/, ''),
-        title: data.title || entry.name,
-        date: data.date || '',
-        excerpt: data.excerpt || '',
-        tags: data.tags || [],
-        categories: data.categories || [],
-        status,
+    // A single malformed/corrupt post file should never take down the
+    // whole listing -- surface it as a visibly broken row instead of
+    // throwing and turning the entire dashboard into "Could not load
+    // posts.".
+    const toPost = (entry, status) => {
+      try {
+        const { data } = parseFrontmatter(entry.content)
+        return {
+          slug: data.slug || entry.name.replace(/\.md$/, ''),
+          title: data.title || entry.name,
+          date: data.date || '',
+          excerpt: data.excerpt || '',
+          tags: data.tags || [],
+          categories: data.categories || [],
+          status,
+        }
+      } catch (err) {
+        console.error(`Failed to parse frontmatter for ${entry.path}:`, err)
+        return {
+          slug: entry.name.replace(/\.md$/, ''),
+          title: `\u26A0\uFE0F ${entry.name} (failed to parse -- check its frontmatter)`,
+          date: '',
+          excerpt: String(err?.message || err),
+          tags: [],
+          categories: [],
+          status: `${status}-error`,
+        }
       }
     }
 
-    const posts = await Promise.all([
-      ...publishedFiles.filter((f) => f.name.endsWith('.md')).map((f) => load(f, 'published')),
-      ...draftFiles.filter((f) => f.name.endsWith('.md') && f.name !== '.gitkeep').map((f) => load(f, 'draft')),
-    ])
+    const posts = [
+      ...publishedFiles.filter((f) => f.name.endsWith('.md')).map((f) => toPost(f, 'published')),
+      ...draftFiles.filter((f) => f.name.endsWith('.md') && f.name !== '.gitkeep').map((f) => toPost(f, 'draft')),
+    ]
 
     posts.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 
     return jsonResponse({ posts })
   } catch (err) {
-    return jsonResponse({ error: 'Could not reach GitHub.', detail: String(err) }, 502)
+    // Log the real error to Cloudflare's Functions logs (dashboard or
+    // `wrangler pages deployment tail`) -- the client only gets a summary.
+    console.error('GET /api/admin/posts failed:', err)
+    return jsonResponse({ error: 'Could not reach GitHub.', detail: String(err?.message || err) }, 502)
   }
 }
 
