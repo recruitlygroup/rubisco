@@ -10,16 +10,24 @@ export default function AdminDashboard() {
   function loadPosts() {
     setError('')
     fetch('/api/admin/posts')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          setError(data.error)
-          setPosts([])
-        } else {
-          setPosts(data.posts)
+      .then(async (res) => {
+        let data
+        try {
+          data = await res.json()
+        } catch {
+          // Response wasn't JSON at all -- almost always a platform-level
+          // failure (gateway error, function crash/timeout) rather than
+          // something the API route itself returned. Surface the HTTP
+          // status so it's at least actionable.
+          throw new Error(`Server returned an unexpected response (HTTP ${res.status}).`)
         }
+        if (data.error) throw new Error(data.error)
+        setPosts(data.posts)
       })
-      .catch(() => setError('Could not load posts.'))
+      .catch((err) => {
+        setError(err.message || 'Could not load posts.')
+        setPosts([])
+      })
   }
 
   useEffect(() => {
