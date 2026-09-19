@@ -8,6 +8,7 @@ import path from 'node:path'
 import { projects } from '../src/content/projects.js'
 import { parseFrontmatter } from '../src/lib/frontmatter.js'
 import { SITE_URL } from '../src/lib/site.js'
+import { SEO_PAGE_PATHS } from '../src/content/seoPages.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
@@ -27,7 +28,7 @@ const postSlugs = readdirSync(postsDir)
 
 const projectSlugs = projects.map((project) => `/projects/${project.slug}`)
 
-const urls = [...staticRoutes, ...projectSlugs, ...postSlugs]
+const urls = [...staticRoutes, ...SEO_PAGE_PATHS, ...projectSlugs, ...postSlugs]
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
