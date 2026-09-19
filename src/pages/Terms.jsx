@@ -5,7 +5,7 @@ export default function Terms() {
     <>
       <Seo
         title="Terms of Use"
-        description="Standard terms of use for the Rubisco Tech website."
+        description="Standard terms of use for the Rubisco website."
         path="/terms"
       />
       <section className="mx-auto max-w-3xl px-6 py-20 sm:px-10">
