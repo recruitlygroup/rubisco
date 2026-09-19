@@ -44,7 +44,7 @@ export default function Home() {
     <>
       <Seo
         title="Software, sensors & systems for dairy and grain farms"
-        description="Rubisco Tech builds offline-first software, IoT sensors and end-to-end digital transformation for dairy and grain farming operations in Nepal."
+        description="Rubisco builds offline-first software, IoT sensors and end-to-end digital transformation for dairy and grain farming operations in Nepal."
         path="/"
       />
       {/* Hero — the line-drawing motif now shares the frame with a real
@@ -59,7 +59,7 @@ export default function Home() {
               We build the technology dairy and grain farms run on.
             </h1>
             <p className="mt-6 max-w-md text-base leading-relaxed text-ink-soft">
-              Rubisco Tech designs software, sensors and systems for working
+              Rubisco designs software, sensors and systems for working
               farms — not just a website, a dream farm, built and run end to
               end.
             </p>
