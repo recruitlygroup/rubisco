@@ -11,6 +11,11 @@ import Contact from './pages/Contact.jsx'
 import Privacy from './pages/Privacy.jsx'
 import Terms from './pages/Terms.jsx'
 import NotFound from './pages/NotFound.jsx'
+import TrainingHub from './pages/TrainingHub.jsx'
+import TrainingCountry from './pages/TrainingCountry.jsx'
+import Employers from './pages/Employers.jsx'
+import AgritechSolutions from './pages/AgritechSolutions.jsx'
+import { destinations } from './content/seoPages.js'
 import AdminLogin from './pages/admin/AdminLogin.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import AdminPostEditor from './pages/admin/AdminPostEditor.jsx'
@@ -32,6 +37,20 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+
+        {/* SEO landing pages. Content lives in src/content/seoPages.js; add a
+            destination there and its /training/<slug> route appears here. */}
+        <Route path="/training" element={<TrainingHub />} />
+        {destinations.map((destination) => (
+          <Route
+            key={destination.slug}
+            path={`/training/${destination.slug}`}
+            element={<TrainingCountry key={destination.slug} destination={destination} />}
+          />
+        ))}
+        <Route path="/hire-herd-managers" element={<Employers />} />
+        <Route path="/agritech-solutions" element={<AgritechSolutions />} />
+
         <Route path="*" element={<NotFound />} />
       </Route>
 
