@@ -2,6 +2,9 @@ import { useState, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const links = [
+  { to: '/training', label: 'Training' },
+  { to: '/hire-herd-managers', label: 'For employers' },
+  { to: '/agritech-solutions', label: 'AgriTech' },
   { to: '/projects', label: 'Projects' },
   { to: '/blog', label: 'Blog' },
   { to: '/about', label: 'About' },
@@ -38,10 +41,10 @@ export default function Header() {
     <header className="border-b border-line/70">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
         <NavLink to="/" className="font-display text-xl font-medium tracking-tight text-ink">
-          Rubisco<span className="text-leaf">.</span>Tech
+          Rubisco
         </NavLink>
 
-        <nav className="hidden items-center gap-8 sm:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-7 lg:flex">
           {links.map((link) => (
             <NavItem key={link.to} {...link} />
           ))}
@@ -51,7 +54,7 @@ export default function Header() {
           ref={toggleRef}
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center sm:hidden"
+          className="flex h-9 w-9 items-center justify-center lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           aria-label={open ? 'Close menu' : 'Open menu'}
@@ -73,7 +76,8 @@ export default function Header() {
           onKeyDown={(event) => {
             if (event.key === 'Escape') closeMenu()
           }}
-          className="flex flex-col gap-1 border-t border-line/70 px-6 py-4 sm:hidden"
+          aria-label="Mobile"
+          className="flex flex-col gap-1 border-t border-line/70 px-6 py-4 lg:hidden"
         >
           {links.map((link) => (
             <div key={link.to} className="py-2">
