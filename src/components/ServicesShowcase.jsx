@@ -31,7 +31,7 @@ export default function ServicesShowcase() {
   return (
     <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
       {/* Tab list */}
-      <div role="tablist" aria-label="Rubisco Tech services" className="flex flex-col divide-y divide-line/70 border-y border-line/70 lg:border-none lg:divide-y-0">
+      <div role="tablist" aria-label="Rubisco services" className="flex flex-col divide-y divide-line/70 border-y border-line/70 lg:border-none lg:divide-y-0">
         {SERVICES.map((service) => {
           const isActive = service.id === activeId
           return (
