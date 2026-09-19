@@ -7,15 +7,39 @@ export default function Footer() {
   return (
     <footer className="border-t border-line/70 bg-paper-dim">
       <div className="mx-auto max-w-6xl px-6 py-14 sm:px-10">
-        <div className="grid gap-10 sm:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1.1fr]">
           <div>
             <p className="font-display text-lg font-medium text-ink">
-              Rubisco<span className="text-leaf">.</span>Tech
+              Rubisco
             </p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">
-              Software, sensors and systems for dairy and grain farms.
+              Dairy farm training and placement, plus software, sensors and
+              systems for dairy and grain farms.
               Registered at Suryabinayak-04, Bhaktapur, Nepal.
             </p>
+          </div>
+
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+              Training
+            </p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><Link to="/training" className="hover:text-leaf">All destinations</Link></li>
+              <li><Link to="/training/new-zealand" className="hover:text-leaf">New Zealand</Link></li>
+              <li><Link to="/training/austria" className="hover:text-leaf">Austria</Link></li>
+              <li><Link to="/training/canada" className="hover:text-leaf">Canada</Link></li>
+              <li><Link to="/training/ireland" className="hover:text-leaf">Ireland</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-soft">
+              Partner with us
+            </p>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li><Link to="/hire-herd-managers" className="hover:text-leaf">Hire herd managers</Link></li>
+              <li><Link to="/agritech-solutions" className="hover:text-leaf">AgriTech solutions</Link></li>
+            </ul>
           </div>
 
           <div>
@@ -36,7 +60,7 @@ export default function Footer() {
             </p>
             <ul className="mt-3 space-y-2 text-sm">
               <li>
-                <a href="mailto:hello@rubisco.tech" className="hover:text-leaf">
+                <a href="mailto:info@rubisco.com.np" className="hover:text-leaf">
                   info@rubisco.com.np
                 </a>
               </li>
