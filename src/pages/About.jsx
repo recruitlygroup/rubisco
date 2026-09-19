@@ -27,7 +27,7 @@ export default function About() {
     <>
       <Seo
         title="About"
-        description="Rubisco Tech is a Nepal-based team building software, sensors and digital transformation for dairy and grain operations — work that starts on the ground."
+        description="Rubisco is a Nepal-based team building software, sensors and digital transformation for dairy and grain operations — work that starts on the ground."
         path="/about"
       />
       <section className="relative overflow-hidden">
