@@ -38,7 +38,7 @@ export default function AdminLogin() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-6">
       <Helmet>
-        <title>Admin login — Rubisco Tech</title>
+        <title>Admin login — Rubisco</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div className="w-full max-w-sm">
