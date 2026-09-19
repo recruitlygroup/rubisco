@@ -13,7 +13,7 @@ const modules = import.meta.glob('../content/posts/*.md', {
 })
 
 const WORDS_PER_MINUTE = 200
-const DEFAULT_AUTHOR = 'Rubisco Tech Team'
+const DEFAULT_AUTHOR = 'Rubisco Team'
 
 // Rough reading-time estimate from the markdown body's word count. Strips
 // the most common markdown syntax first so headings/links/code fences
