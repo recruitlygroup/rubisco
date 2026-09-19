@@ -5,7 +5,7 @@ export default function Privacy() {
     <>
       <Seo
         title="Privacy Policy"
-        description="How Rubisco Tech handles information submitted through the contact form."
+        description="How Rubisco handles information submitted through the contact form."
         path="/privacy"
       />
       <section className="mx-auto max-w-3xl px-6 py-20 sm:px-10">
