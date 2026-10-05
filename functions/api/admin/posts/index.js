@@ -1,16 +1,11 @@
 import { isAuthenticated } from '../../../_lib/session.js'
 import { ghListDirWithContent, ghGetFile, ghPutFile } from '../../../_lib/github.js'
+import { jsonResponse, requireEnv, withErrorHandling } from '../../../_lib/http.js'
 import { parseFrontmatter, serializeFrontmatter } from '../../../../src/lib/frontmatter.js'
 
 const PUBLISHED_DIR = 'src/content/posts'
 const DRAFTS_DIR = 'content/drafts'
 
-function jsonResponse(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json' },
-  })
-}
 
 function slugify(input) {
   return input
@@ -20,12 +15,13 @@ function slugify(input) {
     .replace(/^-+|-+$/g, '')
 }
 
-export async function onRequestGet({ request, env }) {
+export const onRequestGet = withErrorHandling(async ({ request, env }) => {
   if (!(await isAuthenticated(request, env))) {
     return jsonResponse({ error: 'Not authenticated.' }, 401)
   }
+  requireEnv(env)
 
-  try {
+  {
     // One GraphQL call per directory (not one REST call per file) -- see
     // the comment on ghListDirWithContent. This is what keeps the request
     // count flat as the number of posts grows.
@@ -72,18 +68,14 @@ export async function onRequestGet({ request, env }) {
     posts.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 
     return jsonResponse({ posts })
-  } catch (err) {
-    // Log the real error to Cloudflare's Functions logs (dashboard or
-    // `wrangler pages deployment tail`) -- the client only gets a summary.
-    console.error('GET /api/admin/posts failed:', err)
-    return jsonResponse({ error: 'Could not reach GitHub.', detail: String(err?.message || err) }, 502)
   }
-}
+})
 
-export async function onRequestPost({ request, env }) {
+export const onRequestPost = withErrorHandling(async ({ request, env }) => {
   if (!(await isAuthenticated(request, env))) {
     return jsonResponse({ error: 'Not authenticated.' }, 401)
   }
+  requireEnv(env)
 
   let body
   try {
@@ -102,7 +94,7 @@ export async function onRequestPost({ request, env }) {
   const targetPath = `${published ? PUBLISHED_DIR : DRAFTS_DIR}/${slug}.md`
   const otherPath = `${published ? DRAFTS_DIR : PUBLISHED_DIR}/${slug}.md`
 
-  try {
+  {
     const [existingTarget, existingOther] = await Promise.all([
       ghGetFile(env, targetPath),
       ghGetFile(env, otherPath),
@@ -120,7 +112,5 @@ export async function onRequestPost({ request, env }) {
     await ghPutFile(env, targetPath, fileContent, `Add post: ${title}`)
 
     return jsonResponse({ ok: true, slug, status: published ? 'published' : 'draft' }, 201)
-  } catch (err) {
-    return jsonResponse({ error: 'Could not save post to GitHub.', detail: String(err) }, 502)
   }
-}
+})

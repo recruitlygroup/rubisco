@@ -1,16 +1,11 @@
 import { isAuthenticated } from '../../../_lib/session.js'
 import { ghGetFile, ghPutFile, ghDeleteFile } from '../../../_lib/github.js'
+import { jsonResponse, requireEnv, withErrorHandling } from '../../../_lib/http.js'
 import { parseFrontmatter, serializeFrontmatter } from '../../../../src/lib/frontmatter.js'
 
 const PUBLISHED_DIR = 'src/content/posts'
 const DRAFTS_DIR = 'content/drafts'
 
-function jsonResponse(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'content-type': 'application/json' },
-  })
-}
 
 async function locatePost(env, slug) {
   const publishedPath = `${PUBLISHED_DIR}/${slug}.md`
@@ -26,8 +21,9 @@ async function locatePost(env, slug) {
   return null
 }
 
-export async function onRequestGet({ request, env, params }) {
+export const onRequestGet = withErrorHandling(async ({ request, env, params }) => {
   if (!(await isAuthenticated(request, env))) return jsonResponse({ error: 'Not authenticated.' }, 401)
+  requireEnv(env)
 
   const found = await locatePost(env, params.slug)
   if (!found) return jsonResponse({ error: 'Post not found.' }, 404)
@@ -43,10 +39,11 @@ export async function onRequestGet({ request, env, params }) {
     published: found.status === 'published',
     markdown: body,
   })
-}
+})
 
-export async function onRequestPut({ request, env, params }) {
+export const onRequestPut = withErrorHandling(async ({ request, env, params }) => {
   if (!(await isAuthenticated(request, env))) return jsonResponse({ error: 'Not authenticated.' }, 401)
+  requireEnv(env)
 
   const found = await locatePost(env, params.slug)
   if (!found) return jsonResponse({ error: 'Post not found.' }, 404)
@@ -76,7 +73,7 @@ export async function onRequestPut({ request, env, params }) {
     markdown,
   )
 
-  try {
+  {
     if (newStatus === found.status) {
       // Same location — plain update.
       await ghPutFile(env, found.path, fileContent, `Update post: ${title}`, found.sha)
@@ -87,21 +84,16 @@ export async function onRequestPut({ request, env, params }) {
       await ghDeleteFile(env, found.path, `Remove old copy after ${published ? 'publishing' : 'unpublishing'}: ${title}`, found.sha)
     }
     return jsonResponse({ ok: true, slug: params.slug, status: newStatus })
-  } catch (err) {
-    return jsonResponse({ error: 'Could not update post on GitHub.', detail: String(err) }, 502)
   }
-}
+})
 
-export async function onRequestDelete({ request, env, params }) {
+export const onRequestDelete = withErrorHandling(async ({ request, env, params }) => {
   if (!(await isAuthenticated(request, env))) return jsonResponse({ error: 'Not authenticated.' }, 401)
+  requireEnv(env)
 
   const found = await locatePost(env, params.slug)
   if (!found) return jsonResponse({ error: 'Post not found.' }, 404)
 
-  try {
-    await ghDeleteFile(env, found.path, `Delete post: ${params.slug}`, found.sha)
-    return jsonResponse({ ok: true })
-  } catch (err) {
-    return jsonResponse({ error: 'Could not delete post on GitHub.', detail: String(err) }, 502)
-  }
-}
+  await ghDeleteFile(env, found.path, `Delete post: ${params.slug}`, found.sha)
+  return jsonResponse({ ok: true })
+})
