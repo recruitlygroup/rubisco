@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { marked } from 'marked'
 import { Helmet } from 'react-helmet-async'
+import { apiFetch, jsonBody } from '../../lib/api.js'
 
 function slugify(input) {
   return input
@@ -35,13 +36,8 @@ export default function AdminPostEditor() {
 
   useEffect(() => {
     if (!isEditing) return
-    fetch(`/api/admin/posts/${editingSlug}`)
-      .then((res) => res.json())
+    apiFetch(`/api/admin/posts/${editingSlug}`)
       .then((data) => {
-        if (data.error) {
-          setError(data.error)
-          return
-        }
         setForm({
           title: data.title,
           slug: data.slug,
@@ -53,7 +49,7 @@ export default function AdminPostEditor() {
         })
         setSlugTouched(true)
       })
-      .catch(() => setError('Could not load post.'))
+      .catch((err) => setError(err.message || 'Could not load post.'))
       .finally(() => setLoading(false))
   }, [editingSlug, isEditing])
 
@@ -83,25 +79,13 @@ export default function AdminPostEditor() {
     }
 
     try {
-      const res = await fetch(
-        isEditing ? `/api/admin/posts/${editingSlug}` : '/api/admin/posts',
-        {
-          method: isEditing ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        },
-      )
-      const data = await res.json().catch(() => ({}))
-
-      if (!res.ok) {
-        setError(data.error || 'Could not save post.')
-        setSaving(false)
-        return
-      }
-
+      await apiFetch(isEditing ? `/api/admin/posts/${editingSlug}` : '/api/admin/posts', {
+        method: isEditing ? 'PUT' : 'POST',
+        ...jsonBody(payload),
+      })
       navigate('/admin', { replace: true })
-    } catch {
-      setError('Something went wrong — please try again.')
+    } catch (err) {
+      setError(err.message || 'Something went wrong — please try again.')
       setSaving(false)
     }
   }

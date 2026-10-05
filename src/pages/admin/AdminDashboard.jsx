@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { apiFetch } from '../../lib/api.js'
 
 export default function AdminDashboard() {
   const [posts, setPosts] = useState(null)
@@ -9,21 +10,9 @@ export default function AdminDashboard() {
 
   function loadPosts() {
     setError('')
-    fetch('/api/admin/posts')
-      .then(async (res) => {
-        let data
-        try {
-          data = await res.json()
-        } catch {
-          // Response wasn't JSON at all -- almost always a platform-level
-          // failure (gateway error, function crash/timeout) rather than
-          // something the API route itself returned. Surface the HTTP
-          // status so it's at least actionable.
-          throw new Error(`Server returned an unexpected response (HTTP ${res.status}).`)
-        }
-        if (data.error) throw new Error(data.error)
-        setPosts(data.posts)
-      })
+    setPosts(null)
+    apiFetch('/api/admin/posts')
+      .then((data) => setPosts(data.posts || []))
       .catch((err) => {
         setError(err.message || 'Could not load posts.')
         setPosts([])
@@ -38,13 +27,10 @@ export default function AdminDashboard() {
     if (!confirm(`Delete "${slug}"? This removes the file from GitHub and can't be undone.`)) return
     setDeletingSlug(slug)
     try {
-      const res = await fetch(`/api/admin/posts/${slug}`, { method: 'DELETE' })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        setError(data.error || 'Could not delete post.')
-        return
-      }
+      await apiFetch(`/api/admin/posts/${slug}`, { method: 'DELETE' })
       setPosts((prev) => prev.filter((p) => p.slug !== slug))
+    } catch (err) {
+      setError(err.message || 'Could not delete post.')
     } finally {
       setDeletingSlug(null)
     }
@@ -66,7 +52,14 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
-      {error && <p role="alert" className="mt-6 text-sm text-soil">{error}</p>}
+      {error && (
+        <div role="alert" className="mt-6 text-sm text-soil">
+          <p>{error}</p>
+          <button type="button" onClick={loadPosts} className="mt-2 font-mono text-xs text-leaf hover:underline">
+            Retry
+          </button>
+        </div>
+      )}
 
       {posts === null && !error && (
         <p className="mt-6 font-mono text-sm text-ink-soft">Loading…</p>
