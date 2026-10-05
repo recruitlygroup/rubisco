@@ -57,6 +57,9 @@ function parseCookies(header) {
 }
 
 export async function isAuthenticated(request, env) {
+  // Without a secret HMAC import throws ("Zero-length key"), which would crash
+  // the whole request. Treat as unauthenticated; login reports the misconfig.
+  if (!env.SESSION_SECRET) return false
   const cookies = parseCookies(request.headers.get('cookie'))
   const value = cookies[COOKIE_NAME]
   if (!value) return false

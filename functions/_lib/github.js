@@ -16,6 +16,43 @@ function headers(env) {
   }
 }
 
+export class GitHubError extends Error {
+  constructor(message, status) {
+    super(message)
+    this.name = 'GitHubError'
+    this.status = status
+  }
+}
+
+// fetch() with a timeout and a couple of retries for transient GitHub
+// failures (502/503/504, network errors). A hung or flaky upstream call is
+// the usual reason a Pages Function dies without returning JSON.
+async function ghFetch(url, init = {}, { retries = 2, timeoutMs = 8000 } = {}) {
+  let lastErr
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs) })
+      if ([502, 503, 504].includes(res.status) && attempt < retries) {
+        await new Promise((r) => setTimeout(r, 400 * (attempt + 1)))
+        continue
+      }
+      return res
+    } catch (err) {
+      lastErr = err
+      if (attempt < retries) await new Promise((r) => setTimeout(r, 400 * (attempt + 1)))
+    }
+  }
+  throw new GitHubError(`GitHub request failed: ${lastErr?.message || lastErr}`)
+}
+
+function fail(what, res, body) {
+  const hint =
+    res.status === 401 ? ' (GITHUB_TOKEN is invalid or expired)' :
+    res.status === 403 ? ' (token lacks Contents permission, or rate limited)' :
+    res.status === 404 ? ' (check GITHUB_OWNER / GITHUB_REPO / token repo access)' : ''
+  return new GitHubError(`${what} failed: ${res.status}${hint} ${String(body).slice(0, 300)}`, res.status)
+}
+
 function toBase64(str) {
   // btoa expects Latin1; encode UTF-8 bytes first so non-ASCII content
   // (e.g. Nepali text in a post body) round-trips correctly.
@@ -34,9 +71,9 @@ function fromBase64(b64) {
 /** Fetch a single file's content + sha, or null if it doesn't exist. */
 export async function ghGetFile(env, path) {
   const url = `${apiBase(env)}/${path}?ref=${env.GITHUB_BRANCH}`
-  const res = await fetch(url, { headers: headers(env) })
+  const res = await ghFetch(url, { headers: headers(env) })
   if (res.status === 404) return null
-  if (!res.ok) throw new Error(`GitHub GET ${path} failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw fail(`GitHub GET ${path}`, res, await res.text())
   const json = await res.json()
   return { sha: json.sha, content: fromBase64(json.content) }
 }
@@ -44,9 +81,9 @@ export async function ghGetFile(env, path) {
 /** List files in a directory (non-recursive). Returns [] if the dir doesn't exist yet. */
 export async function ghListDir(env, path) {
   const url = `${apiBase(env)}/${path}?ref=${env.GITHUB_BRANCH}`
-  const res = await fetch(url, { headers: headers(env) })
+  const res = await ghFetch(url, { headers: headers(env) })
   if (res.status === 404) return []
-  if (!res.ok) throw new Error(`GitHub LIST ${path} failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw fail(`GitHub LIST ${path}`, res, await res.text())
   const json = await res.json()
   return Array.isArray(json) ? json.filter((entry) => entry.type === 'file') : []
 }
@@ -91,7 +128,7 @@ export async function ghListDirWithContent(env, path) {
       }
     }
   `
-  const res = await fetch('https://api.github.com/graphql', {
+  const res = await ghFetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: { ...headers(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -104,11 +141,11 @@ export async function ghListDirWithContent(env, path) {
     }),
   })
 
-  if (!res.ok) throw new Error(`GitHub GraphQL LIST ${path} failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw fail(`GitHub GraphQL LIST ${path}`, res, await res.text())
 
   const json = await res.json()
   if (json.errors?.length) {
-    throw new Error(`GitHub GraphQL LIST ${path} failed: ${json.errors.map((e) => e.message).join('; ')}`)
+    throw new GitHubError(`GitHub GraphQL LIST ${path} failed: ${json.errors.map((e) => e.message).join('; ')}`)
   }
 
   const entries = json.data?.repository?.object?.entries || []
@@ -119,7 +156,7 @@ export async function ghListDirWithContent(env, path) {
 
 /** Create or update a file. Pass `sha` when updating an existing file. */
 export async function ghPutFile(env, path, content, message, sha) {
-  const res = await fetch(`${apiBase(env)}/${path}`, {
+  const res = await ghFetch(`${apiBase(env)}/${path}`, {
     method: 'PUT',
     headers: { ...headers(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -129,16 +166,16 @@ export async function ghPutFile(env, path, content, message, sha) {
       ...(sha ? { sha } : {}),
     }),
   })
-  if (!res.ok) throw new Error(`GitHub PUT ${path} failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw fail(`GitHub PUT ${path}`, res, await res.text())
   return res.json()
 }
 
 export async function ghDeleteFile(env, path, message, sha) {
-  const res = await fetch(`${apiBase(env)}/${path}`, {
+  const res = await ghFetch(`${apiBase(env)}/${path}`, {
     method: 'DELETE',
     headers: { ...headers(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({ message, sha, branch: env.GITHUB_BRANCH }),
   })
-  if (!res.ok) throw new Error(`GitHub DELETE ${path} failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) throw fail(`GitHub DELETE ${path}`, res, await res.text())
   return res.json()
 }
